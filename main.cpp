@@ -32,74 +32,85 @@ struct note {
 };
 
 
-/*list <note> notes;
+list <note> notes;
 
 void init() {
-    notes
     note n1;
-    n1.name = (char *) "C_7";
+    n1.name = (char *) "C";
     n1.freq = 2093.005;
 
-    notes
-
     note n2;
-    n1.name = (char *) "C_#";
-    n1.freq = 2217.461;
+    n2.name = (char *) "C_#";
+    n2.freq = 2217.461;
+
+    note n3;
+    n3.name = (char *) "D";
+    n3.freq = 2349.318;
 
 
-    0.153m
-    D
-    7
-    2349.318
-    0.145m
-    D# / Eb
-    7
-    2489.016
-    0.137m
-    E
-    7
-    2637.021
-    0.129m
-    F
-    7
-    2793.826
-    0.122m
-    F# / Gb
-    7
-    2959.955
-    0.115m
-    G
-    7
-    3135.964
-    0.109m
-    G# / Ab
-    7
-    3322.438
-    0.102m
-    A
-    7
-    3520
-    0.097m
-    A# / Bb
-    7
-    3729.31
-    0.091m
-    B
-    7
-    3951.066
-    0.086m
+    note n4;
+    n4.name = (char *) "D_#";
+    n4.freq = 2489.01;
 
-    C
-    8
-    418
-}*/
+    note n5;
+    n5.name = (char *) "E";
+    n5.freq = 2637.021;
+
+
+    note n6;
+    n6.name = (char *) "F";
+    n6.freq = 2793.826;
+
+
+    note n7;
+    n7.name = (char *) "F_#";
+    n7.freq = 2959.955;
+
+
+    note n8;
+    n8.name = (char *) "G";
+    n8.freq = 3135.964;
+
+    note n9;
+    n9.name = (char *) "G_#";
+    n9.freq = 3322.438;
+
+    note n10;
+    n10.name = (char *) "A";
+    n10.freq = 3520;
+
+
+    note n11;
+    n11.name = (char *) "A_#";
+    n11.freq = 3729.31;
+
+
+    note n12;
+    n12.name = (char *) "B";
+    n12.freq = 3951.066;
+
+    notes.push_back(n1);
+    notes.push_back(n2);
+    notes.push_back(n3);
+    notes.push_back(n4);
+    notes.push_back(n5);
+    notes.push_back(n6);
+    notes.push_back(n7);
+    notes.push_back(n8);
+    notes.push_back(n9);
+    notes.push_back(n10);
+    notes.push_back(n11);
+    notes.push_back(n12);
+}
+
+int min_gap = 230;
 
 int readFile(const char *file_name, uint32_t samp_rt = 8000) {
     FILE *infile = fopen(file_name, "rb");        // Open wave file in read mode
 
     int BUFSIZE = 512;                    // BUFSIZE can be changed according to the frame size required (eg:512)
     int count = 0;                        // For counting number of frames in wave file.
-    short int buff16[BUFSIZE];                // short int used for 16 bit as input data format is 16 bit PCM audio
+    float buff16[BUFSIZE];                // short int used for 16 bit as input data format is 16 bit PCM audio
     header_p meta = (header_p) malloc(
             sizeof(header));    // header_p points to a header struct that contains the wave file metadata fields
     int nb;                            // variable storing number of byes returned
@@ -114,6 +125,14 @@ int readFile(const char *file_name, uint32_t samp_rt = 8000) {
 
         while (!feof(infile)) {
             nb = fread(totalBuff, 1, meta->chunk_size, infile);        // Reading data in chunks of BUFSIZE
+        }
+
+        for (int k = 0; k < meta->chunk_size; k++) {
+            for (list<note>::iterator it = notes.begin(); it != notes.end(); ++it) {
+                if (abs(totalBuff[k]) + min_gap >= it->freq && abs(totalBuff[k]) - min_gap <= it->freq) {
+                    cout << it->name << endl;
+                }
+            }
         }
 
         static const pa_sample_spec ss = {
@@ -147,6 +166,7 @@ int readFile(const char *file_name, uint32_t samp_rt = 8000) {
 
 int main() {
     const char *str = "/home/max/Projects/sound_learning/test.wav";
+    init();
     readFile(str);
     return 0;
 }
