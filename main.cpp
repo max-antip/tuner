@@ -4,8 +4,16 @@
 #include <pulse/simple.h>
 #include <pulse/error.h>
 #include <list>
+#include <AL/al.h>
+#include <AL/alc.h>
 
 using namespace std;
+
+const int SRATE = 44100;
+const int SSIZE = 1024;
+
+ALbyte buffer[22050];
+ALint sample;
 
 // WAVE PCM soundfile format (you can find more in https://ccrma.stanford.edu/courses/422/projects/WaveFormat/ )
 typedef struct header_file {
@@ -103,7 +111,7 @@ void init() {
     notes.push_back(n12);
 }
 
-int min_gap = 230;
+int min_gap = 100;
 
 int readFile(const char *file_name, uint32_t samp_rt = 8000) {
     FILE *infile = fopen(file_name, "rb");        // Open wave file in read mode
@@ -165,6 +173,9 @@ int readFile(const char *file_name, uint32_t samp_rt = 8000) {
 }
 
 int main() {
+    ALCdevice *device = alcOpenDevice(NULL);
+    if (!device)
+        fprintf(stderr, "Cant  creat audio device");
     const char *str = "/home/max/Projects/sound_learning/test.wav";
     init();
     readFile(str);

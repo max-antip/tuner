@@ -11,3 +11,4 @@ set(SOURCE_FILES main.cpp)
 add_executable(sound_learning ${SOURCE_FILES})
 
 TARGET_LINK_LIBRARIES(sound_learning pulse pulse-simple)
+TARGET_LINK_LIBRARIES(sound_learning openal openal)
