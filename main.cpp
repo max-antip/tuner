@@ -97,7 +97,7 @@ int readFile(const char *file_name, uint32_t samp_rt = 8000) {
 }
 
 int main() {
-    ALbyte buffer[1024];
+    ALbyte buffer[22050];
     soundreader sr;
     sr.read_from_mic(buffer);
 

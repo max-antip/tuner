@@ -14,12 +14,14 @@ class Note_bank {
 public:
     struct note {
         char *name;
-        vector <double >freq;
+        vector<double> freq;
+
+        bool operator<(const note &rhs) const { return name < rhs.name; }
     };
 
     void init_notes();
 
-    vector <note> notes;
+    vector<note> notes;
 
 };
 
